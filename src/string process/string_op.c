@@ -19,6 +19,11 @@ char* removeLineBreak(const char* string, int string_size)
             new_string[new_string_index] = character;
             new_string_index++;
         }
+        else
+        {
+            new_string[new_string_index] = ' ';
+            new_string_index++;
+        }
     }
 
     new_string[new_string_index] = '\0';

@@ -1,19 +1,56 @@
 #include "debug.h"
 
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-void logDebugCaller(const char* msg, const char* caller, int line, const char* func)
+char* format(const char* fmt, va_list args)
 {
-    if (DEBUG) printf("%sDEBUG (%s - %s() - line %d): %s%s\n", ANSI_COLOR_BLUE, caller, func, line, msg, ANSI_COLOR_RESET);
+    va_list args_copy;
+    va_copy(args_copy, args);
+
+    int len = vsnprintf(NULL, 0, fmt, args_copy);
+    va_end(args_copy);
+
+    char* buffer = malloc(len+1);
+    vsnprintf(buffer, len + 1, fmt, args);
+    va_end(args);
+
+    return buffer;
 }
 
-void logWarningCaller(const char* msg, const char* caller, int line, const char* func)
+void logDebugCaller(const char* file, int line, const char* func, const char* fmt, ...)
 {
-    printf("%sWARNING! (%s - %s() - line %d): %s%s\n", ANSI_COLOR_YELLOW, caller, func, line, msg, ANSI_COLOR_RESET);
+    va_list args;
+    va_start(args, fmt);
+
+    char* msg = format(fmt, args);
+
+    if (DEBUG) printf("%sDEBUG (%s - %s() - line %d): %s%s\n", ANSI_COLOR_BLUE, file, func, line, msg, ANSI_COLOR_RESET);
+
+    free(msg);
 }
 
-void logErrorCaller(const char* msg, const char* caller, int line, const char* func)
+void logWarningCaller(const char* file, int line, const char* func, const char* fmt, ...)
 {
-    printf("%sERROR!! (%s - %s() - line %d): %s%s\n", ANSI_COLOR_RED, caller, func, line, msg, ANSI_COLOR_RESET);
+    va_list args;
+    va_start(args, fmt);
+
+    char* msg = format(fmt, args);
+
+    printf("%sWARNING! (%s - %s() - line %d): %s%s\n", ANSI_COLOR_YELLOW, file, func, line, msg, ANSI_COLOR_RESET);
+
+    free(msg);
+}
+
+void logErrorCaller(const char* file, int line, const char* func, const char* fmt, ...)
+{
+    va_list args;
+    va_start(args, fmt);
+
+    char* msg = format(fmt, args);
+
+    printf("%sERROR!! (%s - %s() - line %d): %s%s\n", ANSI_COLOR_RED, file, func, line, msg, ANSI_COLOR_RESET);
+
+    free(msg);
 }

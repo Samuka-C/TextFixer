@@ -11,28 +11,28 @@
 #define ANSI_COLOR_CYAN    "\x1b[36m"
 #define ANSI_COLOR_RESET   "\x1b[0m"
 
-#define logDebug(msg) \
-    logDebugCaller(msg, __FILE__, __LINE__, __func__)
+#define logDebug(fmt, ...) \
+    logDebugCaller(__FILE__, __LINE__, __func__, fmt, ##__VA_ARGS__)
 
-#define logWarning(msg) \
-    logWarningCaller(msg, __FILE__, __LINE__, __func__)
+#define logWarning(fmt, ...) \
+    logWarningCaller(__FILE__, __LINE__, __func__, fmt, ##__VA_ARGS__)
 
-#define logError(msg) \
-    logErrorCaller(msg, __FILE__, __LINE__, __func__)
+#define logError(fmt, ...) \
+    logErrorCaller(__FILE__, __LINE__, __func__, fmt, ##__VA_ARGS__)
 
 /**
  * Shows a debug message on the console only if DEBUG is true
  */
-void logDebugCaller(const char* msg, const char* caller, int line, const char* func);
+void logDebugCaller(const char* file, int line, const char* func, const char* fmt, ...);
 
 /**
  * Shows a warning message on the console
  */
-void logWarningCaller(const char* msg, const char* caller, int line, const char* func);
+void logWarningCaller(const char* file, int line, const char* func, const char* fmt, ...);
 
 /**
  * Shows a error message on the console
  */
-void logErrorCaller(const char* msg, const char* caller, int line, const char* func);
+void logErrorCaller(const char* file, int line, const char* func, const char* fmt, ...);
 
 #endif

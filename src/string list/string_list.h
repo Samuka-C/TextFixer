@@ -1,5 +1,3 @@
-#include <stdlib.h>
-
 #ifndef STRING_LIST
 #define STRING_LIST
 

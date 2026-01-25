@@ -2,7 +2,7 @@ compile all library source code:
 `gcc -c [file.c]`
 
 bundle them into a library
-`rm -f mylib.a`
+`rm mylib.a`
 `ar rcs mylib.a *.o`
 
 update library with single new compiled source code

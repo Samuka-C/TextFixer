@@ -1,7 +1,7 @@
+#include "debug.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-
-#include "debug.h"
 
 void logDebugCaller(const char* msg, const char* caller, int line, const char* func)
 {

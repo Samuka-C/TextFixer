@@ -1,21 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "debug.h"
+#include "../debug/debug.h"
+#include "../string list/string_list.h"
 
-#ifndef STRING_OP_LIB
-#define STRING_OP_LIB
-
-/*Retorna o tamanho de uma string*/
-int getStringSize(const char* string)
-{
-    int size = 0;
-    while (string[size] != '\0') size++;
-    return size;
-}
-
-/* Ao receber uma string, deve retornar a mesma string
-mas sem nenhuma quebra de linha*/
 char* removeLineBreak(const char* string, int string_size)
 {
     char* new_string = (char*)malloc(string_size + 1);
@@ -35,5 +23,3 @@ char* removeLineBreak(const char* string, int string_size)
 
     return new_string;
 }
-
-#endif

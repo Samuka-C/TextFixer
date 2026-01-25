@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include "string_list.h"
-#include "debug.h"
+#include "../debug/debug.h"
 
 int Size(const char* string)
 {

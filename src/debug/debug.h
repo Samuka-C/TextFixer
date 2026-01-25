@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-
 #ifndef DEBUG_LIB
 #define DEBUG_LIB
 

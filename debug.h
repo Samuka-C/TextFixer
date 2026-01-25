@@ -23,19 +23,19 @@
 #define logError(msg) \
     logErrorCaller(msg, __FILE__, __LINE__, __func__)
 
-void logDebugCaller(const char* msg, const char* caller, int line, const char* func)
-{
-    if (DEBUG) printf("%sDEBUG (%s - %s() - line %d): %s%s\n", ANSI_COLOR_BLUE, caller, func, line, msg, ANSI_COLOR_RESET);
-}
+/**
+ * Shows a debug message on the console only if DEBUG is true
+ */
+void logDebugCaller(const char* msg, const char* caller, int line, const char* func);
 
-void logWarningCaller(const char* msg, const char* caller, int line, const char* func)
-{
-    if (DEBUG) printf("%sWARNING! (%s - %s() - line %d): %s%s\n", ANSI_COLOR_YELLOW, caller, func, line, msg, ANSI_COLOR_RESET);
-}
+/**
+ * Shows a warning message on the console
+ */
+void logWarningCaller(const char* msg, const char* caller, int line, const char* func);
 
-void logErrorCaller(const char* msg, const char* caller, int line, const char* func)
-{
-    if (DEBUG) printf("%sERROR!! (%s - %s() - line %d): %s%s\n", ANSI_COLOR_RED, caller, func, line, msg, ANSI_COLOR_RESET);
-}
+/**
+ * Shows a error message on the console
+ */
+void logErrorCaller(const char* msg, const char* caller, int line, const char* func);
 
 #endif

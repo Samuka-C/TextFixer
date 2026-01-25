@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "debug.h"
+#include "../debug/debug.h"
 
 #ifndef STRING_LIST
 #define STRING_LIST

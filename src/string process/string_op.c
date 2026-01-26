@@ -39,11 +39,11 @@ string_list* separateStringIntoWords(const char* string, int length)
     char* buffer = (char*)malloc((length+1) * sizeof(char));
     int buffer_size = 0;
     
-    for (int index = 0; index < length; index++)
+    for (int index = 0; index <= length; index++)
     {
         char character = string[index];
 
-        if (character == ' ' || character == '\t' || character == '\n')
+        if (character == ' ' || character == '\t' || character == '\n' || character == '\0')
         {
             if (buffer_size != 0)
             {
@@ -51,6 +51,12 @@ string_list* separateStringIntoWords(const char* string, int length)
                 strLst_Append(words, word);
                 free(word);
                 buffer_size = 0;
+            }
+
+            if (character == '\0')
+            {
+                logWarning("length provided is greater than string actual size");
+                break;
             }
         }
         else

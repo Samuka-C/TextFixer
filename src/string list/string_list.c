@@ -1,6 +1,7 @@
 #include "string_list.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 #include "../debug/debug.h"
 #include "../string basic/string_basic.h"
 
@@ -110,6 +111,19 @@ string_list_link* strLst_GetLink(string_list* stringList, int index)
     if (count < index) logWarning("index greater than list size");
 
     return aux;
+}
+
+void strLst_Print(string_list* stringList)
+{
+    int len = strLst_GetSize(stringList);
+
+    for(int index = 0; index < len; index++)
+    {
+        string_list_link* link = strLst_GetLink(stringList, index);
+        if (index > 0) printf(", ");
+        printf("%s", link -> string);
+    }
+    printf("\n");
 }
 
 string_list_link* strLst_Append(string_list* stringList, const char* string)

@@ -41,6 +41,11 @@ string_list_link* strLst_GetLastLink(string_list* stringList);
 string_list_link* strLst_GetLink(string_list* stringList, int index);
 
 /**
+ * Prints all the strings in the list
+ */
+void strLst_Print(string_list* stringList);
+
+/**
  * Appends a new link at the end of the list.
  * If the pointer is null, it returns NULL.
  * If it fails to allocate memory for the link or the string, it returns NULL.

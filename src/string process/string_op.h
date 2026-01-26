@@ -11,6 +11,6 @@ char* removeLineBreak(const char* string, int string_size);
 /**
  * Returns a list of words from a string
  */
-string_list* separateStringIntoWords(const char* string);
+string_list* separateStringIntoWords(const char* string, int length);
 
 #endif

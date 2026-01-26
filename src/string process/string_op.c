@@ -53,9 +53,9 @@ string_list* separateStringIntoWords(const char* string, int length)
                 buffer_size = 0;
             }
 
-            if (character == '\0')
+            if (character == '\0' && index < length)
             {
-                logWarning("length provided is greater than string actual size");
+                logWarning("length provided is greater than string actual size of the string. (length provided: %d, actual size: %d)", length, index);
                 break;
             }
         }

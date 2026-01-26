@@ -5,6 +5,7 @@
 
 #include "../debug/debug.h"
 #include "../string list/string_list.h"
+#include "../string basic/string_basic.h"
 
 char* removeLineBreak(const char* string, int string_size)
 {
@@ -30,3 +31,36 @@ char* removeLineBreak(const char* string, int string_size)
 
     return new_string;
 }
+
+string_list* separateStringIntoWords(const char* string, int length)
+{
+    string_list* words = strLst_Create();
+
+    char* buffer = (char*)malloc((length+1) * sizeof(char));
+    int buffer_size = 0;
+    
+    for (int index = 0; index < length; index++)
+    {
+        char character = string[index];
+
+        if (character == ' ' || character == '\t' || character == '\n')
+        {
+            if (buffer_size != 0)
+            {
+                char* word = Copy(buffer, buffer_size);
+                strLst_Append(words, word);
+                free(word);
+                buffer_size = 0;
+            }
+        }
+        else
+        {
+            buffer[buffer_size] = character;
+            buffer_size++;
+        }
+    }
+
+    free(buffer);
+    return words;
+}
+

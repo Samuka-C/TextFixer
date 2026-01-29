@@ -62,7 +62,7 @@ int strLst_GetSize(string_list* stringList)
     return count;
 }
 
-string_list_link* strLst_GetLastLink(string_list* stringList)
+string_list_link* strLst_GetFirstLink(string_list* stringList)
 {
     if (stringList == NULL)
     {
@@ -76,9 +76,7 @@ string_list_link* strLst_GetLastLink(string_list* stringList)
         return NULL;
     }
 
-    string_list_link* aux = stringList -> first;
-    while (aux -> next_link != NULL) aux = aux -> next_link;
-    return aux;
+    return stringList -> first;
 }
 
 string_list_link* strLst_GetLink(string_list* stringList, int index)
@@ -111,6 +109,47 @@ string_list_link* strLst_GetLink(string_list* stringList, int index)
     if (count < index) logWarning("index greater than list size");
 
     return aux;
+}
+
+string_list_link* strLst_GetLastLink(string_list* stringList)
+{
+    if (stringList == NULL)
+    {
+        logError("null pointer");
+        return NULL;
+    }
+
+    if (strLst_CheckEmpty(stringList))
+    {
+        logWarning("trying to read from empty list");
+        return NULL;
+    }
+
+    string_list_link* aux = stringList -> first;
+    while (aux -> next_link != NULL) aux = aux -> next_link;
+    return aux;
+}
+
+string_list_link* strLst_GetNextLink(string_list_link* link)
+{
+    if (link == NULL)
+    {
+        logError("null pointer");
+        return NULL;
+    }
+
+    return link -> next_link;
+}
+
+int strLst_IsLastLink(string_list_link* link)
+{
+    if (link == NULL)
+    {
+        logError("null pointer");
+        return -1;
+    }
+
+    return link -> next_link == NULL;
 }
 
 void strLst_Print(string_list* stringList)

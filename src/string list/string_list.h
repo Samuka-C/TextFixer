@@ -25,11 +25,11 @@ int strLst_CheckEmpty(string_list* stringList);
 int strLst_GetSize(string_list* stringList);
 
 /**
- * Returns a pointer to the last link of a list.
+ * Returns a pointer to the first link of a list.
  * If the pointer is null, it returns NULL.
  * If the list is empty it returns NULL.
  */
-string_list_link* strLst_GetLastLink(string_list* stringList);
+string_list_link* strLst_GetFirstLink(string_list* stringList);
 
 /**
  * Returns a pointer to a link of a list corresponding to the index provided.
@@ -39,6 +39,27 @@ string_list_link* strLst_GetLastLink(string_list* stringList);
  * If the index is greater or equal than the size of the list, it returns the last link of the list.
  */
 string_list_link* strLst_GetLink(string_list* stringList, int index);
+
+/**
+ * Returns a pointer to the last link of a list.
+ * If the pointer is null, it returns NULL.
+ * If the list is empty it returns NULL.
+ */
+string_list_link* strLst_GetLastLink(string_list* stringList);
+
+/**
+ * Returns the next link from a string list given a certain link.
+ * If the pointer is null, it returns NULL.
+ * If the link is the last of the list, it returns NULL. 
+ */
+string_list_link* strLst_GetNextLink(string_list_link* link);
+
+/**
+ * Returns 1 if the link is the last one of the list.
+ * Otherwise it returns 0.
+ * If the pointer is null, it returns -1.
+ */
+int strLst_IsLastLink(string_list_link* link);
 
 /**
  * Prints all the strings in the list

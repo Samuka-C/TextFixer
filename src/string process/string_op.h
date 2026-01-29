@@ -16,7 +16,22 @@ string_list* separateStringIntoWords(const char* string, int length);
 /**
  * Returns 1 if the list of words can be separated into lines of certain length.
  * Returns 0 otherwise.
+ * Returns 1 if the list is empty
+ * If the pointer is null, it returns -1.
  */
 int checkCanSeparate(string_list* stringList, int line_length);
+
+/**
+ * Returns a array of numbers in which the first is the number of lines,
+ * and the others are the number of words in each line
+ * 
+ * This assumes the list can be separated (checkCanSeparate returned 1)
+ * 
+ * E.G. [3, 5, 7, 8] : 3 lines, 5 words in the first line, 7 words in the second line and 8 words in the third line
+ * 
+ * If the pointer is null, it returns NULL.
+ * If the list is empty it will return a pointer to [0]
+ */
+int* getNumWordsPerLine(string_list* stringList, int line_length);
 
 #endif

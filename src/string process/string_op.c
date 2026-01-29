@@ -72,9 +72,17 @@ string_list* separateStringIntoWords(const char* string, int length)
 
 int checkCanSeparate(string_list* stringList, int line_length)
 {
-    string_list_link* link = strLst_GetFirstLink(stringList);
+    if (stringList == NULL)
+    {
+        logError("null pointer");
+        return -1;
+    }
 
-    int canRead = 1;
+    int canRead = !strLst_CheckEmpty(stringList);
+    string_list_link* link;
+
+    if (canRead)
+        link = strLst_GetFirstLink(stringList);
 
     while (canRead)
     {
@@ -90,3 +98,60 @@ int checkCanSeparate(string_list* stringList, int line_length)
     return 1;
 }
 
+int* getNumWordsPerLine(string_list* stringList, int line_length)
+{
+    if (stringList == NULL)
+    {
+        logError("null pointer");
+        return NULL;
+    }
+
+    int numWordsTotal = strLst_GetSize(stringList);
+    int numWordsPerLineAux[numWordsTotal];
+    int numLines = 0;
+
+    int buffer = 0;
+
+    int canRead = !strLst_CheckEmpty(stringList);
+    string_list_link* link;
+
+    if (canRead)
+    {
+        link = strLst_GetFirstLink(stringList);
+        numLines++;
+    }
+
+    while (canRead)
+    {
+        int wordSize = strLst_GetStringSize(link);
+
+        if (buffer == 0)
+        {
+            buffer = wordSize;
+            numWordsPerLineAux[numLines - 1]++;
+        }
+        else if (buffer + wordSize + 1 > line_length)
+        {
+            numLines++;
+            buffer = wordSize;
+            numWordsPerLineAux[numLines - 1]++;
+        }
+        else
+        {
+            buffer += wordSize + 1;
+            numWordsPerLineAux[numLines - 1]++;
+        }
+
+        if (!strLst_IsLastLink(link))
+            link = strLst_GetNextLink(link);
+        else
+            canRead = 0;
+    }
+
+    int* numWordsPerLine = malloc((numLines + 1) * sizeof(int));
+    numWordsPerLine[0] = numLines;
+    for (int index = 1; index <= numLines; index++)
+        numWordsPerLine[index] = numWordsPerLineAux[index - 1];
+    
+    return numWordsPerLine;
+}

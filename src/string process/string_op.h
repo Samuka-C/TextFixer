@@ -13,4 +13,10 @@ char* removeLineBreak(const char* string, int string_size);
  */
 string_list* separateStringIntoWords(const char* string, int length);
 
+/**
+ * Returns 1 if the list of words can be separated into lines of certain length.
+ * Returns 0 otherwise.
+ */
+int checkCanSeparate(string_list* stringList, int line_length);
+
 #endif

@@ -70,3 +70,23 @@ string_list* separateStringIntoWords(const char* string, int length)
     return words;
 }
 
+int checkCanSeparate(string_list* stringList, int line_length)
+{
+    string_list_link* link = strLst_GetFirstLink(stringList);
+
+    int canRead = 1;
+
+    while (canRead)
+    {
+        if (strLst_GetStringSize(link) > line_length)
+            return 0;
+        
+        if (!strLst_IsLastLink(link))
+            link = strLst_GetNextLink(link);
+        else
+            canRead = 0;
+    }
+
+    return 1;
+}
+

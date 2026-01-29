@@ -108,7 +108,10 @@ int* getNumWordsPerLine(string_list* stringList, int line_length)
 
     int numWordsTotal = strLst_GetSize(stringList);
     int numWordsPerLineAux[numWordsTotal];
+    numWordsPerLineAux[0] = 0; // remove memory garbage from first item of the array
     int numLines = 0;
+
+    logDebug("number of words: %d", numWordsTotal);
 
     int buffer = 0;
 
@@ -123,7 +126,15 @@ int* getNumWordsPerLine(string_list* stringList, int line_length)
 
     while (canRead)
     {
+        logDebug("buffer: %d", buffer);
+        logDebug("number of lines: %d", numLines);
+        logDebug("number of words in the last line: %d", numWordsPerLineAux[numLines - 1]);
+
+        char* word = strLst_GetString(link);
+        logDebug("word: %s", word);
+
         int wordSize = strLst_GetStringSize(link);
+        logDebug("word len: %d", wordSize);
 
         if (buffer == 0)
         {
@@ -134,7 +145,7 @@ int* getNumWordsPerLine(string_list* stringList, int line_length)
         {
             numLines++;
             buffer = wordSize;
-            numWordsPerLineAux[numLines - 1]++;
+            numWordsPerLineAux[numLines - 1] = 1; // remove memory garbage from the next item of the array
         }
         else
         {
@@ -147,6 +158,10 @@ int* getNumWordsPerLine(string_list* stringList, int line_length)
         else
             canRead = 0;
     }
+
+    logDebug("buffer: %d", buffer);
+    logDebug("number of lines: %d", numLines);
+    logDebug("number of words in the last line: %d", numWordsPerLineAux[numLines - 1]);
 
     int* numWordsPerLine = malloc((numLines + 1) * sizeof(int));
     numWordsPerLine[0] = numLines;

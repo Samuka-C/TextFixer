@@ -62,6 +62,18 @@ string_list_link* strLst_GetNextLink(string_list_link* link);
 int strLst_IsLastLink(string_list_link* link);
 
 /**
+ * Returns the string from a link.
+ * If the pointer is null, it returns NULL.
+ */
+char* strLst_GetString(string_list_link* link);
+
+/**
+ * Returns the size of the string of a link.
+ * If the pointer is null, it returns -1.
+ */
+int strLst_GetStringSize(string_list_link* link);
+
+/**
  * Prints all the strings in the list
  */
 void strLst_Print(string_list* stringList);

@@ -152,6 +152,28 @@ int strLst_IsLastLink(string_list_link* link)
     return link -> next_link == NULL;
 }
 
+char* strLst_GetString(string_list_link* link)
+{
+    if (link == NULL)
+    {
+        logError("null pointer");
+        return NULL;
+    }
+
+    return link -> string;
+}
+
+int strLst_GetStringSize(string_list_link* link)
+{
+    if (link == NULL)
+    {
+        logError("null pointer");
+        return -1;
+    }
+
+    return link -> string_size;
+}
+
 void strLst_Print(string_list* stringList)
 {
     int len = strLst_GetSize(stringList);

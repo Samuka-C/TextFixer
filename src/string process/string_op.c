@@ -243,6 +243,7 @@ char* alignLeft(const char* string, int line_length)
 
         char* line = alignLineLeft(lineWords, line_length);
         int lineSize = Size(line);
+        logDebug("line: %s", line);
 
         for (int index = 0; index < lineSize; index++)
         {

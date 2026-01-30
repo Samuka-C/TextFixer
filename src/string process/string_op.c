@@ -197,6 +197,7 @@ char* alignLineLeft(string_list* stringList, int line_length)
         {
             link = strLst_GetNextLink(link);
             line[index] = ' ';
+            index++;
         }
         else
             canRead = 0;
@@ -210,13 +211,18 @@ char* alignLineLeft(string_list* stringList, int line_length)
 char* alignLeft(const char* string, int line_length)
 {
     int stringlength = Size(string);
+    logDebug("string length: %d", stringlength);
     string_list* words = separateStringIntoWords(string, stringlength);
 
     if (!checkCanSeparate(words, line_length))
+    {
+        logError("unable to separate string in lines of size %d", line_length);
         return NULL;
+    }
 
     int* numWordsPerLine = getNumWordsPerLine(words, line_length);
     int numberLines = numWordsPerLine[0];
+    logDebug("number of lines: %d", numberLines);
 
     int wordIndex = 0;
 

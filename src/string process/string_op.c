@@ -275,6 +275,7 @@ char* alignLineJustify(string_list* stringList, int line_length)
 
     int totalWordLength = 0;
     int numWords = strLst_GetSize(stringList);
+    logDebug("number of words in line: %d", numWords);
     
     string_list_link* link;
     int canRead = !strLst_CheckEmpty(stringList);
@@ -292,8 +293,13 @@ char* alignLineJustify(string_list* stringList, int line_length)
         else
             canRead = 0;
     }
+    logDebug("total length of all words: %d", totalWordLength);
+
     int totalSpaces = line_length - totalWordLength;
-    int numSeparations = numWords - 1;
+    int numSeparations = numWords > 1 ? numWords - 1 : 1;
+
+    logDebug("number of spaces total: %d", totalSpaces);
+    logDebug("numSeparations: %d", numSeparations);
 
     int spaces[numSeparations];
     for (int i = 0; i < numWords - 1; i++)
@@ -303,7 +309,7 @@ char* alignLineJustify(string_list* stringList, int line_length)
 
     while (totalSpaces > 0)
     {
-        for (int i = 0; i < numWords - 1; i++)
+        for (int i = 0; i < numSeparations; i++)
         {
             if (totalSpaces > 0)
             {
@@ -327,6 +333,8 @@ char* alignLineJustify(string_list* stringList, int line_length)
         char* word = strLst_GetString(link);
         int wordSize = strLst_GetStringSize(link);
 
+        logDebug("word: %s", word);
+
         for (int index_aux = 0; index_aux < wordSize; index_aux++)
         {
             line[index] = word[index_aux];
@@ -336,6 +344,8 @@ char* alignLineJustify(string_list* stringList, int line_length)
         if (!strLst_IsLastLink(link))
         {
             link = strLst_GetNextLink(link);
+
+            logDebug("spaces to add: %d", spaces[spacesIndex]);
             for (int i = 0; i < spaces[spacesIndex]; i++)
             {
                 line[index] = ' ';

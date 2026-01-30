@@ -163,10 +163,100 @@ int* getNumWordsPerLine(string_list* stringList, int line_length)
     logDebug("number of lines: %d", numLines);
     logDebug("number of words in the last line: %d", numWordsPerLineAux[numLines - 1]);
 
-    int* numWordsPerLine = malloc((numLines + 1) * sizeof(int));
+    int* numWordsPerLine = (int*)malloc((numLines + 1) * sizeof(int));
     numWordsPerLine[0] = numLines;
     for (int index = 1; index <= numLines; index++)
         numWordsPerLine[index] = numWordsPerLineAux[index - 1];
     
     return numWordsPerLine;
+}
+
+char* alignLineLeft(string_list* stringList, int line_length)
+{
+    char* line = (char*)malloc((line_length + 1) * sizeof(char));
+    int index = 0;
+
+    int canRead = !strLst_CheckEmpty(stringList);
+    string_list_link* link;
+
+    if (canRead)
+        link = strLst_GetFirstLink(stringList);
+
+    while (canRead)
+    {
+        char* word = strLst_GetString(link);
+        int wordSize = strLst_GetStringSize(link);
+
+        for (int index_aux = 0; index_aux < wordSize; index_aux++)
+        {
+            line[index] = word[index_aux];
+            index++;
+        }
+
+        if (!strLst_IsLastLink(link))
+        {
+            link = strLst_GetNextLink(link);
+            line[index] = ' ';
+        }
+        else
+            canRead = 0;
+    }
+
+    line[index] = '\0';
+
+    return line;
+}
+
+char* alignLeft(const char* string, int line_length)
+{
+    int stringlength = Size(string);
+    string_list* words = separateStringIntoWords(string, stringlength);
+
+    if (!checkCanSeparate(words, line_length))
+        return NULL;
+
+    int* numWordsPerLine = getNumWordsPerLine(words, line_length);
+    int numberLines = numWordsPerLine[0];
+
+    int wordIndex = 0;
+
+    char* alignedString = (char*)malloc(numberLines * (line_length + 1) * sizeof(char));
+    int alignedStringIndex = 0;
+
+    for (int lineIndex = 1; lineIndex <= numberLines; lineIndex++)
+    {
+        int numWordsLine = numWordsPerLine[lineIndex];
+        string_list* lineWords = strLst_Create();
+
+        for (int lineWordIndex = 0; lineWordIndex < numWordsLine; lineWordIndex++)
+        {
+            string_list_link* wordLink = strLst_GetLink(words, wordIndex + lineWordIndex);
+            strLst_Append(lineWords, strLst_GetString(wordLink));
+        }
+        wordIndex += numWordsLine;
+
+        char* line = alignLineLeft(lineWords, line_length);
+        int lineSize = Size(line);
+
+        for (int index = 0; index < lineSize; index++)
+        {
+            alignedString[alignedStringIndex] = line[index];
+            alignedStringIndex++;
+        }
+
+        if (lineIndex != numberLines)
+        {
+            alignedString[alignedStringIndex] = '\n';
+            alignedStringIndex++;
+        }
+
+        free(line);
+        strLst_Destroy(lineWords);
+    }
+
+    strLst_Destroy(words);
+
+    alignedString[alignedStringIndex] = '\0';
+
+    return alignedString;
 }

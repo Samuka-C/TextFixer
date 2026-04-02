@@ -210,6 +210,156 @@ char* alignLineLeft(string_list* stringList, int line_length)
     return line;
 }
 
+char* alignLineRight(string_list* stringList, int line_length)
+{
+    char* line = (char*)malloc((line_length + 1) * sizeof(char));
+    int index = 0;
+
+    int totalWordLength = 0;
+    int numWords = strLst_GetSize(stringList);
+    logDebug("number of words in line: %d", numWords);
+    
+    string_list_link* link;
+    int canRead = !strLst_CheckEmpty(stringList);
+
+    if (canRead)
+        link = strLst_GetFirstLink(stringList);
+    
+    while (canRead)
+    {
+        int wordLength = strLst_GetStringSize(link);
+        totalWordLength += wordLength;
+
+        if (!strLst_IsLastLink(link))
+            link = strLst_GetNextLink(link);
+        else
+            canRead = 0;
+    }
+    logDebug("total length of all words: %d", totalWordLength);
+
+    int totalSpaces = line_length - totalWordLength;
+    int numSeparations = numWords - 1;
+    int numSpacesToTheLeft = totalSpaces - numSeparations;
+
+    logDebug("number of spaces to the left: %d", numSpacesToTheLeft);
+
+    for (int i = 0; i < numSpacesToTheLeft; i++)
+    {
+        line[index] = ' ';
+        index++;
+    }
+
+    canRead = !strLst_CheckEmpty(stringList);
+
+    if (canRead)
+        link = strLst_GetFirstLink(stringList);
+
+    while (canRead)
+    {
+        char* word = strLst_GetString(link);
+        int wordSize = strLst_GetStringSize(link);
+
+        for (int index_aux = 0; index_aux < wordSize; index_aux++)
+        {
+            line[index] = word[index_aux];
+            index++;
+        }
+
+        if (!strLst_IsLastLink(link))
+        {
+            link = strLst_GetNextLink(link);
+            line[index] = ' ';
+            index++;
+        }
+        else
+            canRead = 0;
+    }
+
+    line[index] = '\0';
+
+    return line;
+}
+
+char* alignLineCenter(string_list* stringList, int line_length)
+{
+    char* line = (char*)malloc((line_length + 1) * sizeof(char));
+    int index = 0;
+
+    int totalWordLength = 0;
+    int numWords = strLst_GetSize(stringList);
+    logDebug("number of words in line: %d", numWords);
+    
+    string_list_link* link;
+    int canRead = !strLst_CheckEmpty(stringList);
+
+    if (canRead)
+        link = strLst_GetFirstLink(stringList);
+    
+    while (canRead)
+    {
+        int wordLength = strLst_GetStringSize(link);
+        totalWordLength += wordLength;
+
+        if (!strLst_IsLastLink(link))
+            link = strLst_GetNextLink(link);
+        else
+            canRead = 0;
+    }
+    logDebug("total length of all words: %d", totalWordLength);
+
+    int totalSpaces = line_length - totalWordLength;
+    int numSeparations = numWords - 1;
+    int numSpacesOutside = totalSpaces - numSeparations;
+
+    int numSpacesToTheLeft = numSpacesOutside / 2;
+    int numSpacesToTheRight = numSpacesOutside / 2 + numSpacesOutside % 2;
+
+    logDebug("number of spaces to the left: %d", numSpacesToTheLeft);
+    logDebug("number of spaces to the right: %d", numSpacesToTheRight);
+
+    for (int i = 0; i < numSpacesToTheLeft; i++)
+    {
+        line[index] = ' ';
+        index++;
+    }
+
+    canRead = !strLst_CheckEmpty(stringList);
+
+    if (canRead)
+        link = strLst_GetFirstLink(stringList);
+
+    while (canRead)
+    {
+        char* word = strLst_GetString(link);
+        int wordSize = strLst_GetStringSize(link);
+
+        for (int index_aux = 0; index_aux < wordSize; index_aux++)
+        {
+            line[index] = word[index_aux];
+            index++;
+        }
+
+        if (!strLst_IsLastLink(link))
+        {
+            link = strLst_GetNextLink(link);
+            line[index] = ' ';
+            index++;
+        }
+        else
+            canRead = 0;
+    }
+
+    for (int i = 0; i < numSpacesToTheRight; i++)
+    {
+        line[index] = ' ';
+        index++;
+    }
+
+    line[index] = '\0';
+
+    return line;
+}
+
 char* alignLineJustify(string_list* stringList, int line_length)
 {
     char* line = (char*)malloc((line_length + 1) * sizeof(char));
@@ -367,6 +517,16 @@ char* align(alignLineFunc alignLineMethod, const char* string, int line_length)
 char* alignLeft(const char* string, int line_length)
 {
     return align(alignLineLeft, string, line_length);
+}
+
+char* alignRight(const char* string, int line_length)
+{
+    return align(alignLineRight, string, line_length);
+}
+
+char* alignCenter(const char* string, int line_length)
+{
+    return align(alignLineCenter, string, line_length);
 }
 
 char* alignJustify(const char* string, int line_length)

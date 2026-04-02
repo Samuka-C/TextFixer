@@ -53,6 +53,38 @@ char* alignLeft(const char* string, int line_length);
 /**
  * Gets a set of words that fit in a single line of determined size and returns a string of that line
  * 
+ * Aligns all words to the right
+ */
+char* alignLineRight(string_list* stringList, int line_length);
+
+/**
+ * Gets a string and breakes it into lines of determined length
+ * 
+ * Aligns all words to the right
+ * 
+ * If its not possible to separate into lines of the determined length, it returns NULL.
+ */
+char* alignRight(const char* string, int line_length);
+
+/**
+ * Gets a set of words that fit in a single line of determined size and returns a string of that line
+ * 
+ * Aligns all words to the center
+ */
+char* alignLineCenter(string_list* stringList, int line_length);
+
+/**
+ * Gets a string and breakes it into lines of determined length
+ * 
+ * Aligns all words to the center
+ * 
+ * If its not possible to separate into lines of the determined length, it returns NULL.
+ */
+char* alignCenter(const char* string, int line_length);
+
+/**
+ * Gets a set of words that fit in a single line of determined size and returns a string of that line
+ * 
  * Aligns all words fix the whole line
  */
 char* alignLineJustify(string_list* stringList, int line_length);

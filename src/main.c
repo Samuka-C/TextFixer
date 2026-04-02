@@ -11,7 +11,7 @@
 /// @brief Prints the help text explaining how to use the program
 void print_help()
 {
-    printf("Usage: .\\textFixer [options] <input>\n");
+    printf("Usage: .\\textFixer [options] <input> <line length>\n");
     printf("\nOptions:\n");
     printf("  -h, --help           Show this help message\n");
     printf("  -f, --file           Treat input as file path\n");
@@ -85,8 +85,6 @@ int main(int argc, char *argv[])
     int treat_as_file = 0;
     char *output_file_path = NULL;
 
-    int line_length = 60;
-
     struct option long_options[] = 
     {
         {"help", no_argument, NULL, 'h'},
@@ -117,7 +115,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    // Remaining argument = input
+    // Remaining arguments = input and line length
     if (optind >= argc)
     {
         logError("missing input");
@@ -125,7 +123,16 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    if (optind + 1 >= argc)
+    {
+        logError("missing line lenght");
+        print_help();
+        return 1;
+    }
+
     char *input = argv[optind];
+    int line_length = atoi(argv[optind + 1]); 
+
     char *data = NULL;
 
     if (treat_as_file)

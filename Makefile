@@ -5,7 +5,7 @@ textFixer$(EXE): main.o mylib.a
 	$(cc) main.o mylib.a -o textFixer$(EXE)
 
 main.o: src/main.c src/debug/debug.h
-	$(cc) -c src/main.c -o main.oma
+	$(cc) -c src/main.c -o main.o
 
 libs := debug.o string_basic.o string_list.o string_op.o
 

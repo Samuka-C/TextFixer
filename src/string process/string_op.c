@@ -171,6 +171,8 @@ int* getNumWordsPerLine(string_list* stringList, int line_length)
     return numWordsPerLine;
 }
 
+typedef char* (*alignLineFunc)(string_list* stringList, int line_length);
+
 char* alignLineLeft(string_list* stringList, int line_length)
 {
     char* line = (char*)malloc((line_length + 1) * sizeof(char));
@@ -206,66 +208,6 @@ char* alignLineLeft(string_list* stringList, int line_length)
     line[index] = '\0';
 
     return line;
-}
-
-char* alignLeft(const char* string, int line_length)
-{
-    int stringlength = Size(string);
-    logDebug("string length: %d", stringlength);
-    string_list* words = separateStringIntoWords(string, stringlength);
-
-    if (!checkCanSeparate(words, line_length))
-    {
-        logError("unable to separate string in lines of size %d", line_length);
-        return NULL;
-    }
-
-    int* numWordsPerLine = getNumWordsPerLine(words, line_length);
-    int numberLines = numWordsPerLine[0];
-    logDebug("number of lines: %d", numberLines);
-
-    int wordIndex = 0;
-
-    char* alignedString = (char*)malloc(numberLines * (line_length + 1) * sizeof(char));
-    int alignedStringIndex = 0;
-
-    for (int lineIndex = 1; lineIndex <= numberLines; lineIndex++)
-    {
-        int numWordsLine = numWordsPerLine[lineIndex];
-        string_list* lineWords = strLst_Create();
-
-        for (int lineWordIndex = 0; lineWordIndex < numWordsLine; lineWordIndex++)
-        {
-            string_list_link* wordLink = strLst_GetLink(words, wordIndex + lineWordIndex);
-            strLst_Append(lineWords, strLst_GetString(wordLink));
-        }
-        wordIndex += numWordsLine;
-
-        char* line = alignLineLeft(lineWords, line_length);
-        int lineSize = Size(line);
-        logDebug("line: %s", line);
-
-        for (int index = 0; index < lineSize; index++)
-        {
-            alignedString[alignedStringIndex] = line[index];
-            alignedStringIndex++;
-        }
-
-        if (lineIndex != numberLines)
-        {
-            alignedString[alignedStringIndex] = '\n';
-            alignedStringIndex++;
-        }
-
-        free(line);
-        strLst_Destroy(lineWords);
-    }
-
-    strLst_Destroy(words);
-
-    alignedString[alignedStringIndex] = '\0';
-
-    return alignedString;
 }
 
 char* alignLineJustify(string_list* stringList, int line_length)
@@ -362,7 +304,7 @@ char* alignLineJustify(string_list* stringList, int line_length)
     return line;
 }
 
-char* alignJustify(const char* string, int line_length)
+char* align(alignLineFunc alignLineMethod, const char* string, int line_length)
 {
     int stringlength = Size(string);
     logDebug("string length: %d", stringlength);
@@ -395,7 +337,7 @@ char* alignJustify(const char* string, int line_length)
         }
         wordIndex += numWordsLine;
 
-        char* line = alignLineJustify(lineWords, line_length);
+        char* line = alignLineMethod(lineWords, line_length);
         int lineSize = Size(line);
         logDebug("line: %s", line);
 
@@ -420,4 +362,14 @@ char* alignJustify(const char* string, int line_length)
     alignedString[alignedStringIndex] = '\0';
 
     return alignedString;
+}
+
+char* alignLeft(const char* string, int line_length)
+{
+    return align(alignLineLeft, string, line_length);
+}
+
+char* alignJustify(const char* string, int line_length)
+{
+    return align(alignLineJustify, string, line_length);
 }

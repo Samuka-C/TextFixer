@@ -1,13 +1,3 @@
-compile all library source code:
-`gcc -c [file.c]`
+# TextFixer
 
-bundle them into a library
-`rm .\mylib.a`
-`ar rcs .\mylib.a *.o`
-
-update library with single new compiled source code
-`gcc -c [file.c]`
-`ar rcs .\mylib.a [file.o]`
-
-compile the main source file
-`gcc .\src\main.c .\mylib.a -o .\textFixer.exe`
+A simple program that takes strings as input and outputs them with multiple lines with a fixed line lenght

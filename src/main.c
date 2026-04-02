@@ -8,6 +8,14 @@
 #include "string process/string_op.h"
 #include "string list/string_list.h"
 
+enum alignType
+{
+    LEFT,
+    RIGHT,
+    CENTER,
+    JUSTIFY
+};
+
 /// @brief Prints the help text explaining how to use the program
 void print_help()
 {
@@ -15,6 +23,10 @@ void print_help()
     printf("\nOptions:\n");
     printf("  -h, --help           Show this help message\n");
     printf("  -f, --file           Treat input as file path\n");
+    printf("  -l, --left           Align the lines to the left\n");
+    printf("  -r, --right          Align the lines to the right\n");
+    printf("  -c, --center         Align the lines to the center\n");
+    printf("  -j, --just           Justify the lines (default if no option is given)\n");
     printf("  -o, --output <file>  Output file\n");
 }
 
@@ -85,33 +97,48 @@ int main(int argc, char *argv[])
     int treat_as_file = 0;
     char *output_file_path = NULL;
 
+    enum alignType type = JUSTIFY;
+
     struct option long_options[] = 
     {
         {"help", no_argument, NULL, 'h'},
         {"file", no_argument, NULL, 'f'},
+        {"left", no_argument, NULL, 'l'},
+        {"right", no_argument, NULL, 'r'},
+        {"center", no_argument, NULL, 'c'},
+        {"just", no_argument, NULL, 'j'},
         {"output", required_argument, NULL, 'o'},
         {NULL, 0, NULL, 0}
     };
 
-    while ((opt = getopt_long(argc, argv, "hfo:", long_options, &option_index)) != -1)
+    while ((opt = getopt_long(argc, argv, "hflrcjo:", long_options, &option_index)) != -1)
     {
         switch (opt)
         {
-        case 'h':
-            print_help();
-            return 0;
-
-        case 'f':
-            treat_as_file = 1;
-            break;
-
-        case 'o':
-            output_file_path = optarg;
-            break;
-
-        default:
-            print_help();
-            return 1;
+            case 'h':
+                print_help();
+                return 0;
+            case 'f':
+                treat_as_file = 1;
+                break;
+            case 'l':
+                type = LEFT;
+                break;
+            case 'r':
+                type = RIGHT;
+                break;
+            case 'c':
+                type = CENTER;
+                break;
+            case 'j':
+                type = JUSTIFY;
+                break;
+            case 'o':
+                output_file_path = optarg;
+                break;
+            default:
+                print_help();
+                return 1;
         }
     }
 
@@ -144,7 +171,23 @@ int main(int argc, char *argv[])
     else
         data = input;
 
-    char *output = alignJustify(data, line_length);
+    char *output;
+
+    switch (type)
+    {
+        case LEFT:
+            output = alignLeft(data, line_length);
+            break;
+        case RIGHT:
+            output = alignRight(data, line_length);
+            break;
+        case CENTER:
+            output = alignCenter(data, line_length);
+            break;
+        case JUSTIFY:
+            output = alignJustify(data, line_length);
+            break;
+    }
 
     if (output == NULL)
     {

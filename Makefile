@@ -1,6 +1,10 @@
 EXE := .exe # swap to `EXE := ` for linux
 cc := gcc # swap for your prefered c compiler
 
+all:
+	make textFixer$(EXE)
+	make wordCounter$(EXE)
+
 textFixer$(EXE): textFixer.o mylib.a
 	$(cc) textFixer.o mylib.a -o textFixer$(EXE)
 

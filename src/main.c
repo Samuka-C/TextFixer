@@ -5,6 +5,7 @@
 
 #include "debug/debug.h"
 #include "string basic/string_basic.h"
+#include "string basic/text_file.h"
 #include "string process/string_op.h"
 #include "string list/string_list.h"
 
@@ -28,65 +29,6 @@ void print_help()
     printf("  -c, --center         Align the lines to the center\n");
     printf("  -j, --just           Justify the lines (default if no option is given)\n");
     printf("  -o, --output <file>  Output file\n");
-}
-
-/// @brief Reads a string from a text file
-/// @param path path to the text file
-/// @return a pointer to a string. NULL if the was a error reading the file or allocating memory for the string
-char *read_file(const char* path)
-{
-    FILE *file = fopen(path, "r");
-
-    if (file == NULL)
-    {
-        logError("file in path (%s) could not be read!", path);
-        return NULL;
-    }
-
-    fseek(file, 0, SEEK_END);
-    long size = ftell(file);
-    rewind(file);
-
-    logDebug("size: %d", size);
-
-    char *buffer = (char*)malloc((size + 1) * sizeof(char));
-    if (buffer == NULL)
-    {
-        logError("could not allocate memory to store text from file in (%s)!", path);
-        fclose(file);
-        return NULL;
-    }
-
-    logDebug("buffer address: %p", (void*)buffer);
-
-    int count = fread(buffer, 1, size, file);
-    logDebug("count: %d", count);
-
-    buffer[size] = '\0';
-    logDebug("text in the buffer: %s", buffer);
-
-    fclose(file);
-    return buffer;
-}
-
-/// @brief Writes a string to a text file
-/// @param path path to the text file
-/// @param string string to write
-/// @return 0 if could write with no problems, 1 if there was a problem
-int write_file(const char* path, const char* string)
-{
-    FILE *file = fopen(path, "w");
-
-    if (file == NULL)
-    {
-        logError("could not create or open file in (%s)", path);
-        return 1;
-    }
-
-    fprintf(file, string);
-
-    fclose(file);
-    return 0;
 }
 
 int main(int argc, char *argv[])

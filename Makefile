@@ -7,7 +7,7 @@ textFixer$(EXE): main.o mylib.a
 main.o: src/main.c src/debug/debug.h
 	$(cc) -c src/main.c -o main.o
 
-libs := debug.o string_basic.o string_list.o string_op.o
+libs := debug.o string_basic.o text_file.o string_list.o string_op.o
 
 mylib.a: $(libs) src/debug/debug.h
 	ar rcs mylib.a $(libs)
@@ -17,6 +17,9 @@ debug.o: src/debug/debug.c src/debug/debug.h
 
 string_basic.o: src/string\ basic/string_basic.c src/debug/debug.h
 	$(cc) -c "src/string basic/string_basic.c" -o string_basic.o
+
+text_file.o: src/string\ basic/text_file.c src/debug/debug.h
+	$(cc) -c "src/string basic/text_file.c" -o text_file.o
 
 string_list.o: src/string\ list/string_list.c src/debug/debug.h
 	$(cc) -c "src/string list/string_list.c" -o string_list.o

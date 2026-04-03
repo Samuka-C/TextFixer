@@ -305,8 +305,12 @@ void strLst_Remove(string_list* stringList)
         aux = aux -> next_link;
     }
 
+    logDebug("liberando link que contem %s", aux -> string);
+
     free(aux -> string);
     free(aux);
+
+    logDebug("link liberado");
 
     if (previous != NULL) previous -> next_link = NULL;
     else stringList -> first = NULL;
@@ -369,6 +373,8 @@ void strLst_Destroy(string_list* stringList)
     }
 
     while (!strLst_CheckEmpty(stringList)) strLst_Remove(stringList);
+
+    logDebug("liberado todos os links!");
 
     free(stringList);
 }

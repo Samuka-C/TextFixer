@@ -132,16 +132,21 @@ words_amount countWords(string_list* words)
     for (int index = 0; index < number_words; index++)
     {
         char* word = strLst_GetString(strLst_GetLink(words, index));
+        logDebug("word to check: %s", word);
+
         int unique_word_index = compareMultiple(word, unique_words);
 
         if (unique_word_index >= 0) 
         {
+            logDebug("that word was repeated!");
             amounts[unique_word_index]++;
+            logDebug("now there are %d of the word \"%s\"", amounts[unique_word_index], strLst_GetString(strLst_GetLink(unique_words, unique_word_index)));
         }
         else
         {
+            logDebug("the word \"%s\" is unique! and now there is 1 of them!", word);
             strLst_Append(unique_words, word);
-            amounts[strLst_GetSize(unique_words)] = 0;
+            amounts[strLst_GetSize(unique_words) - 1] = 1;
         }
     }
 
@@ -159,6 +164,10 @@ char* graphWordCount(words_amount amount_of_words)
     {
         total_number_words += amounts[amount_index];
     }
+
+    logDebug("total number of words: %d", total_number_words);
+    if (total_number_words == 0)
+        return "NO WORDS!!";
 
     int largest_word_length = getBiggestWord(unique_words);
     int largest_amount_length = 0;
@@ -184,11 +193,14 @@ char* graphWordCount(words_amount amount_of_words)
         char* word = strLst_GetString(strLst_GetLink(unique_words, word_index));
         string_list* single_word_list = strLst_Create();
         strLst_Append(single_word_list, word);
-        free(word);
         char* word_aligned_right = alignLineRight(single_word_list, largest_word_length);
         strLst_Destroy(single_word_list);
 
-        int amount = amounts[word_index];
+        logDebug("word_aligned_right: %s", word_aligned_right);
+
+        int amount = amounts[word_index]; 
+        logDebug("amount of word: %d", amount);
+
         char number[largest_amount_length + 1];
         sprintf(number, "%d", amount);
         string_list* single_number_list = strLst_Create();
@@ -196,13 +208,19 @@ char* graphWordCount(words_amount amount_of_words)
         char* number_aligned_center = alignLineCenter(single_number_list, largest_amount_length);
         strLst_Destroy(single_number_list);
 
-        float percentage = (amount / total_number_words) * 100;
+        logDebug("number_aligned_center: %s", number_aligned_center);
+
+        float percentage = (amount * 100 / total_number_words);
+        logDebug("percentage: %.2f%%", percentage);
+
         char percentage_string[8];
-        sprintf(percentage_string, "%.2f", amount);
+        sprintf(percentage_string, "%.2f%%", percentage);
         string_list* single_percentage_list = strLst_Create();
         strLst_Append(single_percentage_list, percentage_string);
         char* percentage_aligned_center = alignLineCenter(single_percentage_list, 7);
         strLst_Destroy(single_percentage_list);
+
+        logDebug("percentage_aligned_center: %s", percentage_aligned_center);
 
         int number_of_number_sign = (int)round(percentage / 10.0f);
         char bar_string[11];
@@ -210,8 +228,14 @@ char* graphWordCount(words_amount amount_of_words)
             bar_string[i] = i < number_of_number_sign ? '#' : ' ';
         bar_string[10] = '\0';
 
+        logDebug("bar_string: %s", bar_string);
+
         char* line = (char*)malloc(line_size * sizeof(char));
         sprintf(line, "%s | %s | %s | %s\n", word_aligned_right, number_aligned_center, percentage_aligned_center, bar_string);
+
+        logDebug("graph before the line:\n%s", graph);
+        logDebug("line: %s", line);
+
         free(word_aligned_right);
         free(number_aligned_center);
         free(percentage_aligned_center);
@@ -220,8 +244,10 @@ char* graphWordCount(words_amount amount_of_words)
         free(line);
     }
 
-    strLst_Destroy(unique_words);
+    logDebug("graph in the end:\n%s", graph);
+
     free(amounts);
+    strLst_Destroy(unique_words);
 
     return graph;
 }

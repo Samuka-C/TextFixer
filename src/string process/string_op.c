@@ -183,11 +183,15 @@ char* graphWordCount(words_amount amount_of_words)
     int number_unique_words = strLst_GetSize(unique_words);
 
     int total_number_words = 0;
+    int largest_amount = 0;
     for (int amount_index = 0; amount_index < number_unique_words; amount_index++)
     {
-        total_number_words += amounts[amount_index];
+        int amount = amounts[amount_index];
+        total_number_words += amount;
+        largest_amount = amount > largest_amount ? amount : largest_amount;
     }
 
+    logDebug("largest amount of words: %d", largest_amount);
     logDebug("total number of words: %d", total_number_words);
     if (total_number_words == 0)
         return "NO WORDS!!";
@@ -251,7 +255,9 @@ char* graphWordCount(words_amount amount_of_words)
 
         logDebug("percentage_aligned_center: %s", percentage_aligned_center);
 
-        int number_of_number_sign = (int)round(percentage / 10.0f);
+        int number_of_number_sign = (int)round(amount * 10 / largest_amount);
+        logDebug("number of # (%d * 10 / %d) = %d", amount, largest_amount, number_of_number_sign);
+
         char bar_string[11];
         for (int i = 0; i < 10; i++)
             bar_string[i] = i < number_of_number_sign ? '#' : ' ';

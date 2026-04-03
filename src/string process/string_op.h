@@ -8,10 +8,10 @@
  */
 char* removeLineBreak(const char* string, int string_size);
 
-/**
- * Returns a list of words from a string
- */
-string_list* separateStringIntoWords(const char* string, int length);
+/// @brief separates a string into words
+/// @param string the string to separate into words
+/// @return a string_list with all the words
+string_list* separateStringIntoWords(const char* string);
 
 /**
  * Returns 1 if the list of words can be separated into lines of certain length.

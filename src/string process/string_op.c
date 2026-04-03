@@ -32,31 +32,28 @@ char* removeLineBreak(const char* string, int string_size)
     return new_string;
 }
 
-string_list* separateStringIntoWords(const char* string, int length)
+string_list* separateStringIntoWords(const char* string)
 {
     string_list* words = strLst_Create();
+    int buffer_max_size = Size(string) + 1; // If the string is only one word (no spaces) the buffer will have to have the size of the string
+                                            // plus the extra \0 char in the end.
 
-    char* buffer = (char*)malloc((length+1) * sizeof(char));
+    char* buffer = (char*)malloc((buffer_max_size) * sizeof(char));
     int buffer_size = 0;
-    
-    for (int index = 0; index <= length; index++)
-    {
-        char character = string[index];
 
-        if (character == ' ' || character == '\t' || character == '\n' || character == '\0')
+    int index = 0;
+    char character = string[index];
+
+    while (character != '\0')
+    {
+        if (character == ' ' || character == '\t' || character == '\n')
         {
-            if (buffer_size != 0)
+            if (buffer_size > 0)
             {
                 char* word = Copy(buffer, buffer_size);
                 strLst_Append(words, word);
                 free(word);
                 buffer_size = 0;
-            }
-
-            if (character == '\0' && index < length)
-            {
-                logWarning("length provided is greater than string actual size of the string. (length provided: %d, actual size: %d)", length, index);
-                break;
             }
         }
         else
@@ -64,6 +61,17 @@ string_list* separateStringIntoWords(const char* string, int length)
             buffer[buffer_size] = character;
             buffer_size++;
         }
+
+        index++;
+        character = string[index];
+    }
+
+    if (buffer_size > 0)
+    {
+        char* word = Copy(buffer, buffer_size);
+        strLst_Append(words, word);
+        free(word);
+        buffer_size = 0;
     }
 
     free(buffer);
@@ -458,7 +466,7 @@ char* align(alignLineFunc alignLineMethod, const char* string, int line_length)
 {
     int stringlength = Size(string);
     logDebug("string length: %d", stringlength);
-    string_list* words = separateStringIntoWords(string, stringlength);
+    string_list* words = separateStringIntoWords(string);
 
     if (!checkCanSeparate(words, line_length))
     {

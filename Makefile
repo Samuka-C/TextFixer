@@ -1,11 +1,11 @@
 EXE := .exe # swap to `EXE := ` for linux
 cc := gcc # swap for your prefered c compiler
 
-textFixer$(EXE): main.o mylib.a
-	$(cc) main.o mylib.a -o textFixer$(EXE)
+textFixer$(EXE): textFixer.o mylib.a
+	$(cc) textFixer.o mylib.a -o textFixer$(EXE)
 
-main.o: src/main.c src/debug/debug.h
-	$(cc) -c src/main.c -o main.o
+textFixer.o: src/textFixer.c src/debug/debug.h
+	$(cc) -c src/textFixer.c -o textFixer.o
 
 libs := debug.o string_basic.o text_file.o string_list.o string_op.o
 

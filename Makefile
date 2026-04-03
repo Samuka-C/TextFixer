@@ -7,6 +7,12 @@ textFixer$(EXE): textFixer.o mylib.a
 textFixer.o: src/textFixer.c src/debug/debug.h
 	$(cc) -c src/textFixer.c -o textFixer.o
 
+wordCounter$(EXE): wordCounter.o mylib.a
+	$(cc) wordCounter.o mylib.a -o wordCounter$(EXE)
+
+wordCounter.o: src/wordCounter.c src/debug/debug.h
+	$(cc) -c src/wordCounter.c -o wordCounter.o
+
 libs := debug.o string_basic.o text_file.o string_list.o string_op.o
 
 mylib.a: $(libs) src/debug/debug.h

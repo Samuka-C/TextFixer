@@ -173,14 +173,20 @@ char* graphWordCount(words_amount amount_of_words)
     int largest_amount_length = 0;
     for (int amount_index = 0; amount_index < number_unique_words; amount_index++)
     {
-        int length = amounts[amount_index] == 0 ? 1 : ceil(log10(amounts[amount_index]));
+        int n = amounts[amount_index];
+        int length = (n == 0) ? 1 : (int)floor(log10(abs(n))) + 1;
         largest_amount_length = length > largest_amount_length ? length : largest_amount_length;
     }
 
-    // (largest_word_length + " | " + largest_amount_length + " | " + "000.00%" + " | " + "####################" + '\n') x number_unique_words
+    logDebug("largest_word_length: %d", largest_word_length);
+    logDebug("largest_amount_length: %d", largest_amount_length);
 
-    int line_size = largest_word_length + 3 + largest_amount_length + 3 + 7 + 3 + 10 + 1;
-    char* graph = (char*)malloc((line_size * number_unique_words + 1) * sizeof(char));
+    // (largest_word_length + " | " + largest_amount_length + " | " + "000.00%" + " | " + "####################") x number_unique_words
+
+    int line_size = largest_word_length + 3 + largest_amount_length + 3 + 7 + 3 + 10;
+    logDebug("line_size: %d", line_size);
+
+    char* graph = (char*)malloc(((line_size + 1) * number_unique_words) * sizeof(char));
     if (graph == NULL)
     {
         logError("error at allocation of memory for the graph string!");
@@ -230,17 +236,21 @@ char* graphWordCount(words_amount amount_of_words)
 
         logDebug("bar_string: %s", bar_string);
 
-        char* line = (char*)malloc(line_size * sizeof(char));
-        sprintf(line, "%s | %s | %s | %s\n", word_aligned_right, number_aligned_center, percentage_aligned_center, bar_string);
+        char* line = (char*)malloc((line_size + 1) * sizeof(char));
+        sprintf(line, "%s | %s | %s | %s", word_aligned_right, number_aligned_center, percentage_aligned_center, bar_string);
+        if (Size(line) > line_size) logWarning("tamanho da linha: %d eh maior que o tamanho maximo da linha: %d", Size(line), line_size);
 
         logDebug("graph before the line:\n%s", graph);
-        logDebug("line: %s", line);
+        logDebug("line: \"%s\"", line);
 
         free(word_aligned_right);
         free(number_aligned_center);
         free(percentage_aligned_center);
 
         strcat(graph, line);
+        logDebug("graph after the line:\n%s", graph);
+        strcat(graph, "\n");
+
         free(line);
     }
 

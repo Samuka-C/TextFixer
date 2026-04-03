@@ -75,6 +75,8 @@ int main(int argc, char *argv[])
 
     char *output = graphWordCount(countWords(separateStringIntoWords(data)));
 
+    logDebug("graph:\n%s", output);
+
     if (output == NULL)
     {
         printf("unable to make the graph");

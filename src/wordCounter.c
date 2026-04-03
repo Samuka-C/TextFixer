@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
     else
         data = input;
 
-    char *output = graphWordCount(countWords(separateStringIntoWords(data)));
+    char *output = graphWordCount(countWords(separateStringIntoWords(filterOnlyLetters(data))));
 
     logDebug("graph:\n%s", output);
 

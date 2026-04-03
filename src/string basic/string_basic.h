@@ -13,4 +13,10 @@ int Size(const char* string);
  */
 char* Copy(const char* string, int size);
 
+/// @brief Tells if two strings are the same, value wise
+/// @param string_a first string
+/// @param string_b second string
+/// @return 1 if they are the same, 0 if they are different
+int Compare(const char* string_a, const char* string_b);
+
 #endif

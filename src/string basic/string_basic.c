@@ -30,3 +30,21 @@ char* Copy(const char* string, int size)
     copy[index] = '\0';
     return copy;
 }
+
+int Compare(const char* string_a, const char* string_b)
+{
+    int index = 0;
+    while (string_a[index] != '\0' && string_b[index] != '\0')
+    {
+        if (string_a[index] != string_b[index])
+            return 0;
+
+        index++;
+    }
+
+    // Check if both are empty when one of them is empty
+    if (string_a[index] != string_b[index])
+        return 0;
+
+    return 1;
+}

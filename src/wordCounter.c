@@ -6,6 +6,7 @@
 #include "string basic/string_basic.h"
 #include "string basic/text_file.h"
 #include "string list/string_list.h"
+#include "string process/string_op.h"
 
 /// @brief Prints the help text explaining how to use the program
 void print_help()
@@ -72,5 +73,26 @@ int main(int argc, char *argv[])
     else
         data = input;
 
-    char *output;
+    char *output = graphWordCount(countWords(separateStringIntoWords(data)));
+
+    if (output == NULL)
+    {
+        printf("unable to make the graph");
+        return 1;
+    }
+
+    if (output_file_path != NULL)
+    {
+        if (write_file(output_file_path, output))
+        {
+            printf("unable to write output to output file!\n");
+            return 1;
+        }
+        
+        printf("output written to output file with sucess!\n");
+        return 0;
+    }
+    
+    printf("output:\n%s\n", output);
+    return 0;
 }

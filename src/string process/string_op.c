@@ -78,6 +78,50 @@ string_list* separateStringIntoWords(const char* string)
     return words;
 }
 
+/// @brief Checks if a word is present in a list of words
+/// @param new_word word to check if equal
+/// @param words list of words
+/// @return the index of that word in the list if the word belongs to the list, -1 if it doesn't belong to the list
+int compareMultiple(const char* new_word, string_list* words)
+{
+    for (int index = 0; index < strLst_GetSize(words); index++)
+    {
+        char* word = strLst_GetString(strLst_GetLink(words, index));
+        if (Compare(word, new_word))
+            return index;
+    }
+
+    return -1;
+}
+
+word_amount countWordsString(const char* string)
+{
+    string_list* words = separateStringIntoWords(string);
+    int number_words = strLst_GetSize(words);
+
+    string_list* unique_words = strLst_Create();
+    int* amounts = (int*)calloc(number_words, sizeof(int));
+
+    for (int index = 0; index < number_words; index++)
+    {
+        char* word = strLst_GetString(strLst_GetLink(words, index));
+        int unique_word_index = compareMultiple(word, unique_words);
+
+        if (unique_word_index >= 0) 
+        {
+            amounts[unique_word_index]++;
+        }
+        else
+        {
+            strLst_Append(unique_words, word);
+            amounts[strLst_GetSize(unique_words)] = 0;
+        }
+    }
+
+    word_amount word_amount = {unique_words, amounts};
+    return word_amount;
+}
+
 int checkCanSeparate(string_list* stringList, int line_length)
 {
     if (stringList == NULL)

@@ -3,6 +3,16 @@
 
 #include "../string list/string_list.h"
 
+/// @brief A combo with a list of words and a array of integers which represent the amount of that word in a text
+typedef struct word_amount_struct
+{
+    /// @brief List of unique words of a text
+    string_list* unique_words;
+
+    /// @brief Array of int which represent the amount of that unique word in a text
+    int* amounts;
+} word_amount;
+
 /**
  * Returns the entry string without line breaks
  */
@@ -12,6 +22,11 @@ char* removeLineBreak(const char* string, int string_size);
 /// @param string the string to separate into words
 /// @return a string_list with all the words
 string_list* separateStringIntoWords(const char* string);
+
+/// @brief Counts the amount of words in a string
+/// @param string the string to count words from
+/// @return a word_amount with a string_list and a array of int
+word_amount countWordsString(const char* string);
 
 /**
  * Returns 1 if the list of words can be separated into lines of certain length.

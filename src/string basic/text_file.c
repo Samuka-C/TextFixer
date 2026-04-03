@@ -49,7 +49,7 @@ int write_file(const char* path, const char* string)
         return 1;
     }
 
-    fprintf(file, string);
+    fprintf(file, "%s", string);
 
     fclose(file);
     return 0;

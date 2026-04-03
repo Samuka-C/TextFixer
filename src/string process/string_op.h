@@ -18,6 +18,11 @@ typedef struct word_amount_struct
  */
 char* removeLineBreak(const char* string, int string_size);
 
+/// @brief replaces all non-letter characters with space
+/// @param string the original string
+/// @return the same pointer to the string
+char* filterOnlyLetters(char* string);
+
 /// @brief separates a string into words
 /// @param string the string to separate into words
 /// @return a string_list with all the words, NULL if it fails to allocate space for the word buffer

@@ -34,6 +34,29 @@ char* removeLineBreak(const char* string, int string_size)
     return new_string;
 }
 
+char* filterOnlyLetters(char* string)
+{
+    int index = 0;
+    char character = string[index];
+
+    while (character != '\0')
+    {
+        if (character < 'A')
+            string[index] = ' ';
+
+        if (character > 'Z' && character < 'a')
+            string[index] = ' ';
+
+        if (character > 'z')
+            string[index] = ' ';
+
+        index++;
+        character = string[index];
+    }
+
+    return string;
+}
+
 string_list* separateStringIntoWords(const char* string)
 {
     string_list* words = strLst_Create();

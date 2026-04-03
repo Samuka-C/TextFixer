@@ -2,6 +2,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <math.h>
 
 #include "../debug/debug.h"
 #include "../string list/string_list.h"
@@ -39,6 +41,11 @@ string_list* separateStringIntoWords(const char* string)
                                             // plus the extra \0 char in the end.
 
     char* buffer = (char*)malloc((buffer_max_size) * sizeof(char));
+    if (buffer == NULL)
+    {
+        logError("error at allocating space for the buffer of words!");
+        return NULL;
+    }
     int buffer_size = 0;
 
     int index = 0;
@@ -78,6 +85,22 @@ string_list* separateStringIntoWords(const char* string)
     return words;
 }
 
+/// @brief Gets the size of the biggest word of a list
+/// @param word_list list of words to look through
+/// @return the size of the longest word
+int getBiggestWord(string_list* word_list)
+{
+    int largest_word_length = 0;
+
+    for (int index = 0; index < strLst_GetSize(word_list); index++)
+    {
+        int word_length = strLst_GetStringSize(strLst_GetLink(word_list, index));
+        largest_word_length = word_length > largest_word_length ? word_length : largest_word_length;
+    }
+
+    return largest_word_length;
+}
+
 /// @brief Checks if a word is present in a list of words
 /// @param new_word word to check if equal
 /// @param words list of words
@@ -94,13 +117,17 @@ int compareMultiple(const char* new_word, string_list* words)
     return -1;
 }
 
-word_amount countWordsString(const char* string)
+words_amount countWords(string_list* words)
 {
-    string_list* words = separateStringIntoWords(string);
     int number_words = strLst_GetSize(words);
 
     string_list* unique_words = strLst_Create();
     int* amounts = (int*)calloc(number_words, sizeof(int));
+    if (amounts == NULL)
+    {
+        logError("error at allocating memory for the int array!");
+        return (words_amount){NULL, NULL};
+    }
 
     for (int index = 0; index < number_words; index++)
     {
@@ -118,8 +145,85 @@ word_amount countWordsString(const char* string)
         }
     }
 
-    word_amount word_amount = {unique_words, amounts};
-    return word_amount;
+    return (words_amount){unique_words, amounts};
+}
+
+char* graphWordCount(words_amount amount_of_words)
+{
+    string_list* unique_words = amount_of_words.unique_words;
+    int* amounts = amount_of_words.amounts;
+    int number_unique_words = strLst_GetSize(unique_words);
+
+    int total_number_words = 0;
+    for (int amount_index = 0; amount_index < number_unique_words; amount_index++)
+    {
+        total_number_words += amounts[amount_index];
+    }
+
+    int largest_word_length = getBiggestWord(unique_words);
+    int largest_amount_length = 0;
+    for (int amount_index = 0; amount_index < number_unique_words; amount_index++)
+    {
+        int length = amounts[amount_index] == 0 ? 1 : ceil(log10(amounts[amount_index]));
+        largest_amount_length = length > largest_amount_length ? length : largest_amount_length;
+    }
+
+    // (largest_word_length + " | " + largest_amount_length + " | " + "000.00%" + " | " + "####################" + '\n') x number_unique_words
+
+    int line_size = largest_word_length + 3 + largest_amount_length + 3 + 7 + 3 + 10 + 1;
+    char* graph = (char*)malloc((line_size * number_unique_words + 1) * sizeof(char));
+    if (graph == NULL)
+    {
+        logError("error at allocation of memory for the graph string!");
+        return NULL;
+    }
+    graph[0] = '\0';
+    
+    for (int word_index = 0; word_index < number_unique_words; word_index++)
+    {
+        char* word = strLst_GetString(strLst_GetLink(unique_words, word_index));
+        string_list* single_word_list = strLst_Create();
+        strLst_Append(single_word_list, word);
+        free(word);
+        char* word_aligned_right = alignLineRight(single_word_list, largest_word_length);
+        strLst_Destroy(single_word_list);
+
+        int amount = amounts[word_index];
+        char number[largest_amount_length + 1];
+        sprintf(number, "%d", amount);
+        string_list* single_number_list = strLst_Create();
+        strLst_Append(single_number_list, number);
+        char* number_aligned_center = alignLineCenter(single_number_list, largest_amount_length);
+        strLst_Destroy(single_number_list);
+
+        float percentage = (amount / total_number_words) * 100;
+        char percentage_string[8];
+        sprintf(percentage_string, "%.2f", amount);
+        string_list* single_percentage_list = strLst_Create();
+        strLst_Append(single_percentage_list, percentage_string);
+        char* percentage_aligned_center = alignLineCenter(single_percentage_list, 7);
+        strLst_Destroy(single_percentage_list);
+
+        int number_of_number_sign = (int)round(percentage / 10.0f);
+        char bar_string[11];
+        for (int i = 0; i < 10; i++)
+            bar_string[i] = i < number_of_number_sign ? '#' : ' ';
+        bar_string[10] = '\0';
+
+        char* line = (char*)malloc(line_size * sizeof(char));
+        sprintf(line, "%s | %s | %s | %s\n", word_aligned_right, number_aligned_center, percentage_aligned_center, bar_string);
+        free(word_aligned_right);
+        free(number_aligned_center);
+        free(percentage_aligned_center);
+
+        strcat(graph, line);
+        free(line);
+    }
+
+    strLst_Destroy(unique_words);
+    free(amounts);
+
+    return graph;
 }
 
 int checkCanSeparate(string_list* stringList, int line_length)

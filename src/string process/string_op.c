@@ -9,6 +9,8 @@
 #include "../string list/string_list.h"
 #include "../string basic/string_basic.h"
 
+#define NUMBER_OF_NUMBER_SIGN 100
+
 char* removeLineBreak(const char* string, int string_size)
 {
     char* new_string = (char*)malloc(string_size + 1);
@@ -210,7 +212,7 @@ char* graphWordCount(words_amount amount_of_words)
 
     // (largest_word_length + " | " + largest_amount_length + " | " + "000.00%" + " | " + "####################") x number_unique_words
 
-    int line_size = largest_word_length + 3 + largest_amount_length + 3 + 7 + 3 + 10;
+    int line_size = largest_word_length + 3 + largest_amount_length + 3 + 7 + 3 + NUMBER_OF_NUMBER_SIGN;
     logDebug("line_size: %d", line_size);
 
     char* graph = (char*)malloc(((line_size + 1) * number_unique_words) * sizeof(char));
@@ -255,13 +257,13 @@ char* graphWordCount(words_amount amount_of_words)
 
         logDebug("percentage_aligned_center: %s", percentage_aligned_center);
 
-        int number_of_number_sign = (int)round(amount * 10 / largest_amount);
+        int number_of_number_sign = (int)round(amount * NUMBER_OF_NUMBER_SIGN / largest_amount);
         logDebug("number of # (%d * 10 / %d) = %d", amount, largest_amount, number_of_number_sign);
 
-        char bar_string[11];
-        for (int i = 0; i < 10; i++)
+        char bar_string[NUMBER_OF_NUMBER_SIGN + 1];
+        for (int i = 0; i < NUMBER_OF_NUMBER_SIGN; i++)
             bar_string[i] = i < number_of_number_sign ? '#' : ' ';
-        bar_string[10] = '\0';
+        bar_string[NUMBER_OF_NUMBER_SIGN] = '\0';
 
         logDebug("bar_string: %s", bar_string);
 
